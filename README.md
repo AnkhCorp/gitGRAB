@@ -10,4 +10,5 @@ pip install requests
 python3 gitgrab.py
 ```
 
-![image](https://github.com/user-attachments/assets/f0e503d2-d6e4-410f-8eda-3bb036b73f0b)
+![image](https://github.com/user-attachments/assets/50a147e6-9451-4cba-b2e4-005ccb639125)
+
