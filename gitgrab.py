@@ -22,7 +22,7 @@ bold_text = TextColor.BOLD + "Created by: " + TextColor.END + "AnkhCorp"
 print(colored_text)
 print(bold_text)
 
-USER_NAME = input("Qual o nome de usuário: ")
+USER_NAME = input("Username: ")
 
 def get_user_repositories(user):
     url = f"https://api.github.com/users/{user}/repos"
@@ -41,14 +41,14 @@ def get_user_info(user):
 
     user_data = response.json()
     filtered_data = {
-        "Usuario": user_data.get("login"),          
+        "User": user_data.get("login"),          
         "ID": user_data.get("id"),      
-        "Nome completo": user_data.get("name"),    
-        "localizacao": user_data.get("location"),  
-        "Email pessoal": user_data.get("email"),    
-        "Biografia": user_data.get("bio"),          
-        "Criado em": user_data.get("created_at"),  
-        "Atualizado em": user_data.get("updated_at")
+        "Name": user_data.get("name"),    
+        "Location": user_data.get("location"),  
+        "Personal email": user_data.get("email"),    
+        "Biography": user_data.get("bio"),          
+        "Created in": user_data.get("created_at"),  
+        "Updated on": user_data.get("updated_at")
     }
     filtered_data = {k: v for k, v in filtered_data.items() if v is not None}
     return filtered_data if filtered_data else None
