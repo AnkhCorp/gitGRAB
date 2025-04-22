@@ -111,6 +111,21 @@ class GitHubScraper:
         except Exception as err:
             print(f"{Colors.RED}Error with commit data: {err}{Colors.END}")
             return set()
+            
+    def get_public_ssh_keys(self, username):
+        url = f"{self.api_base}/users/{username}/keys"
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            
+            keys = response.json()
+            return keys
+        except requests.exceptions.HTTPError as err:
+            print(f"{Colors.RED}Error retrieving SSH keys: {err}{Colors.END}")
+            return []
+        except Exception as err:
+            print(f"{Colors.RED}Unexpected error: {err}{Colors.END}")
+            return []
 
     def display_user_info(self, user_info):
         if not user_info:
@@ -150,6 +165,25 @@ class GitHubScraper:
         if len(repos) > 10:
             print(f"...and {len(repos) - 10} more repositories")
 
+    def display_ssh_keys(self, username, ssh_keys):
+        if not ssh_keys:
+            print(f"\n{Colors.YELLOW}No public SSH keys found for {username}{Colors.END}")
+            return
+            
+        print(f"\n{Colors.GREEN}🔑 Public SSH Keys ({len(ssh_keys)}){Colors.END}")
+        print("─" * 50)
+        
+        for idx, key in enumerate(ssh_keys, 1):
+            print(f"{idx}. {Colors.BOLD}ID:{Colors.END} {key['id']}")
+            
+            # Display the complete key
+            print(f"   {Colors.BLUE}Key:{Colors.END}")
+            print(f"   {key['key']}")
+            
+            # Add a separator between keys
+            if idx < len(ssh_keys):
+                print("\n" + "·" * 40 + "\n")
+
     def run(self):
         self.display_banner()
         
@@ -168,6 +202,9 @@ class GitHubScraper:
         
         repos = self.get_repositories(username)
         self.display_repositories(username, repos)
+        
+        ssh_keys = self.get_public_ssh_keys(username)
+        self.display_ssh_keys(username, ssh_keys)
 
 
 if __name__ == "__main__":
