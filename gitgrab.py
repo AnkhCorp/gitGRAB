@@ -127,7 +127,7 @@ class GitHubScraper:
             print(f"{Colors.RED}Unexpected error: {err}{Colors.END}")
             return []
 
-    def display_user_info(self, user_info):
+    def display_user_info(self, username, user_info):
         if not user_info:
             return
             
@@ -137,8 +137,8 @@ class GitHubScraper:
         for key, value in user_info.items():
             if key in ["Username", "Name", "ID"]:
                 print(f"{Colors.BOLD}{key}:{Colors.END} {value}")
-            elif key in ["Email"]:
-                print(f"{Colors.BLUE}{key}:{Colors.END} {value}")
+            elif key == "Email":
+                print(f"{Colors.BOLD}{key}:{Colors.END} {Colors.RED}{value}{Colors.END}")
             else:
                 print(f"{key}: {value}")
 
@@ -159,7 +159,11 @@ class GitHubScraper:
             if emails:
                 print(f"   {Colors.BLUE}Emails in commits:{Colors.END}")
                 for name, email in emails:
-                    print(f"   → {name}: {email}")
+                    # Check if the committer name contains the username (case insensitive)
+                    if username.lower() in name.lower() or username.lower() in email.lower():
+                        print(f"   → {name}: {Colors.RED}{email}{Colors.END}")
+                    else:
+                        print(f"   → {name}: {email}")
             print()
             
         if len(repos) > 10:
@@ -198,7 +202,7 @@ class GitHubScraper:
         if not user_info:
             return
             
-        self.display_user_info(user_info)
+        self.display_user_info(username, user_info)
         
         repos = self.get_repositories(username)
         self.display_repositories(username, repos)
